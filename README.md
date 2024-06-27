@@ -252,6 +252,7 @@ int main() {
 
 Il debugging è il processo di identificazione e correzione degli errori nel codice. Gli strumenti comuni includono `gdb` per il debugging e `Valgrind` per il rilevamento delle perdite di memoria.
 
+
 ## Introduzione al C++
 
 ### Origini del C++
@@ -276,55 +277,304 @@ int main() {
 }
 ```
 
-- `class Punto`: Definisce una classe chiamata `Punto`.
-- `Punto(int a, int b)`: Costruttore della classe `Punto`.
+- `class Punto`: Definisce una classe chiamata `Punto`. Una classe è un tipo di dato complesso che può includere variabili (chiamate attributi o membri) e funzioni (chiamate metodi).
+- `public`: Specificatore di accesso che rende i membri della classe accessibili da altre parti del programma.
+- `Punto(int a, int b) : x(a), y(b)`: Costruttore della classe `Punto`, che inizializza i membri `x` e `y` con i valori `a` e `b`.
+- `Punto p1(10, 20)`: Crea un'istanza della classe `Punto` e la inizializza con i valori 10 e 20.
+- `printf("Punto: (%d, %d)\n", p1.x, p1.y)`: Stampa i valori degli attributi `x` e `y` dell'oggetto `p1`.
 
 ### OOP in C++
 
 L'OOP in C++ include concetti come incapsulamento, ereditarietà e polimorfismo. Le classi definiscono i tipi di dati complessi che possono includere metodi e attributi.
 
+### Incapsulamento
+
+L'incapsulamento è il concetto di nascondere i dettagli interni di un oggetto e permettere l'accesso solo tramite metodi definiti. Ecco un esempio:
+
+```cpp
+class Contatore {
+private:
+    int valore;
+
+public:
+    Contatore() : valore(0) {}
+    void incrementa() { valore++; }
+    int getValore() const { return valore; }
+};
+
+int main() {
+    Contatore c;
+    c.incrementa();
+    printf("Valore del contatore: %d\n", c.getValore());
+    return 0;
+}
+```
+
+- `private`: Specificatore di accesso che rende i membri della classe accessibili solo dall'interno della classe stessa.
+- `Contatore() : valore(0)`: Costruttore che inizializza `valore` a 0.
+- `void incrementa()`: Metodo che incrementa il valore di `valore`.
+- `int getValore() const`: Metodo che restituisce il valore di `valore`.
+
+### Ereditarietà
+
+L'ereditarietà permette a una classe di derivare da un'altra classe, ereditando i suoi attributi e metodi. Ecco un esempio:
+
+```cpp
+class Forma {
+public:
+    void disegna() { printf("Disegna una forma\n"); }
+};
+
+class Cerchio : public Forma {
+public:
+    void disegna() { printf("Disegna un cerchio\n"); }
+};
+
+int main() {
+    Cerchio c;
+    c.disegna();
+    return 0;
+}
+```
+
+- `class Cerchio : public Forma`: Definisce una classe `Cerchio` che eredita pubblicamente dalla classe `Forma`.
+- `void disegna()`: Metodo sovrascritto nella classe derivata `Cerchio`.
+
+### Polimorfismo
+
+Il polimorfismo permette di trattare oggetti di classi derivate come oggetti della loro classe base. Ecco un esempio:
+
+```cpp
+class Forma {
+public:
+    virtual void disegna() { printf("Disegna una forma\n"); }
+};
+
+class Cerchio : public Forma {
+public:
+    void disegna() override { printf("Disegna un cerchio\n"); }
+};
+
+void disegnaForma(Forma& f) {
+    f.disegna();
+}
+
+int main() {
+    Cerchio c;
+    disegnaForma(c);
+    return 0;
+}
+```
+
+- `virtual void disegna()`: Metodo virtuale nella classe base `Forma`.
+- `void disegna() override`: Metodo sovrascritto nella classe derivata `Cerchio`.
+- `disegnaForma(Forma& f)`: Funzione che accetta un riferimento a un oggetto di tipo `Forma` e chiama il metodo `disegna` appropriato.
+
 ### Funzioni e Overloading
 
-C++ permette il sovraccarico delle funzioni, il che significa che più funzioni possono avere lo stesso nome ma diversi tipi di parametri.
+C++ permette il sovraccarico delle funzioni, il che significa che più funzioni possono avere lo stesso nome ma diversi tipi di parametri. Ecco un esempio:
+
+```cpp
+class Matematica {
+public:
+    int somma(int a, int b) { return a + b; }
+    double somma(double a, double b) { return a + b; }
+};
+
+int main() {
+    Matematica m;
+    printf("Somma di interi: %d\n", m.somma(3, 4));
+    printf("Somma di double: %.2f\n", m.somma(3.5, 4.5));
+    return 0;
+}
+```
+
+- `int somma(int a, int b)`: Metodo che somma due numeri interi.
+- `double somma(double a, double b)`: Metodo che somma due numeri double.
 
 ## Gestione della Memoria in C++
 
 ### Costruttori e Distruttori
 
-I costruttori sono funzioni speciali che inizializzano gli oggetti di una classe. I distruttori sono chiamati quando un oggetto è distrutto per liberare risorse.
+I costruttori sono funzioni speciali che inizializzano gli oggetti di una classe. I distruttori sono chiamati quando un oggetto è distrutto per liberare risorse. Ecco un esempio:
+
+```cpp
+class Risorsa {
+public:
+    Risorsa() { printf("Risorsa allocata\n"); }
+    ~Risorsa() { printf("Risorsa deallocata\n"); }
+};
+
+int main() {
+    { Risorsa r; }
+    printf("Blocco di codice eseguito\n");
+    return 0;
+}
+```
+
+- `Risorsa()`: Costruttore della classe `Risorsa`.
+- `~Risorsa()`: Distruttore della classe `Risorsa`.
 
 ### Gestione delle Eccezioni
 
-La gestione delle eccezioni in C++ è fatta tramite i blocchi `try`, `catch` e `throw`. Questo permette di gestire errori runtime in modo strutturato.
+La gestione delle eccezioni in C++ è fatta tramite i blocchi `try`, `catch` e `throw`. Questo permette di gestire errori runtime in modo strutturato. Ecco un esempio:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int main() {
+    try {
+        throw runtime_error("Errore di runtime");
+    } catch (const runtime_error& e) {
+        cout << "Eccezione catturata: " << e.what() << endl;
+    }
+    return 0;
+}
+```
+
+- `try`: Blocco di codice che può generare un'eccezione.
+- `catch`: Blocco di codice che cattura e gestisce l'eccezione.
+- `throw`: Genera un'eccezione.
 
 ### Smart Pointers
 
-Gli smart pointers, come `std::unique_ptr` e `std::shared_ptr`, aiutano a gestire la memoria automaticamente, prevenendo perdite di memoria e migliorando la sicurezza del codice.
+Gli smart pointers, come `std::unique_ptr` e `std::shared_ptr`, aiutano a gestire la memoria automaticamente, prevenendo perdite di memoria e migliorando la sicurezza del codice. Ecco un esempio:
+
+```cpp
+#include <memory>
+#include <iostream>
+using namespace std;
+
+class Risorsa {
+public:
+    Risorsa() { cout << "Risorsa allocata\n"; }
+    ~Risorsa() { cout << "Risorsa deallocata\n"; }
+};
+
+int main() {
+    std::unique_ptr<Risorsa> ptr = std::make_unique<Risorsa>();
+    return 0;
+}
+```
+
+- `std::unique_ptr`: Smart pointer che gestisce la memoria di un oggetto, garantendo che venga deallocato automaticamente quando non più utilizzato.
+- `std::make_unique`: Funzione che crea un `std::unique_ptr`.
 
 ## Strutture Dati Avanzate in C++
 
 ### Classi e Oggetti
 
-Le classi sono blueprint per creare oggetti. Ogni oggetto è un'istanza di una classe con i propri dati e metodi.
+Le classi sono blueprint per creare oggetti. Ogni oggetto è un'istanza di una classe con i propri dati e metodi. Ecco un esempio:
+
+```cpp
+class Persona {
+public:
+    string nome;
+    int eta;
+    void saluta() const {
+        cout << "Ciao, mi chiamo " << nome << " e ho " << eta << " anni." << endl;
+    }
+};
+
+int main() {
+    Persona p;
+    p.nome = "Mario";
+    p.eta = 30;
+    p.saluta();
+    return 0;
+}
+```
+
+- `string nome`: Attributo della classe `Persona` che memorizza il nome.
+- `int eta`: Attributo della classe `Persona` che memorizza l'età.
+- `void saluta() const`: Metodo della classe `Persona` che stampa un saluto.
 
 ### Contenitori STL
 
-La Standard Template Library (STL) include una varietà di contenitori come `vector`, `list`, `map` e `set`, che forniscono strutture dati efficienti e flessibili.
+La Standard Template Library (STL) include una varietà di contenitori come `vector`, `list`, `map` e `set`, che forniscono strutture dati efficienti e flessibili. Ecco un esempio:
+
+```cpp
+#include <vector>
+#include <iostream>
+using namespace std;
+
+int main() {
+    vector<int> numeri = {1, 2, 3, 4, 5};
+    for (int n : numeri) {
+        cout << n << " ";
+    }
+    cout << endl;
+    return 0;
+}
+```
+
+- `vector<int>`: Contenitore STL che memorizza una sequenza di interi.
+- `for (int n : numeri)`: Loop che itera su ogni elemento del `vector`.
 
 ### Algoritmi STL
 
-La STL include anche molti algoritmi standard, come `sort`, `find` e `transform`, che possono essere usati con i contenitori STL.
+La STL include anche molti algoritmi standard, come `sort`, `find` e `transform`, che possono essere usati con i contenitori STL. Ecco un esempio:
+
+```cpp
+#include <algorithm>
+#include <vector>
+#include <iostream>
+using namespace std;
+
+int main() {
+    vector<int> numeri = {4, 2, 3, 1, 5};
+    sort(numeri.begin(), numeri.end());
+    for (int n : numeri) {
+        cout << n << " ";
+    }
+    cout << endl;
+    return 0;
+}
+```
+
+- `sort(numeri.begin(), numeri.end())`: Algoritmo STL che ordina gli elementi di un `vector`.
 
 ## Programmazione Generica in C++
 
 ### Template e Metaprogrammazione
 
-I template permettono la scrittura di funzioni e classi generiche. La metaprogrammazione template permette l'esecuzione di calcoli a tempo di compilazione per ottimizzare il codice.
+I template permettono la scrittura di funzioni e classi generiche. La metaprogrammazione template permette l'esecuzione di calcoli a tempo di compilazione per ottimizzare il codice. Ecco un esempio:
+
+```cpp
+template<typename T>
+T somma(T a, T b) {
+    return a + b;
+}
+
+int main() {
+    cout << "Somma di interi: " << somma(3, 4) << endl;
+    cout << "Somma di double: " << somma(3.5, 4.5) << endl;
+    return 0;
+}
+```
+
+- `template<typename T>`: Definisce un template di funzione che può operare su vari tipi di dati.
+- `T somma(T a, T b)`: Funzione template che somma due valori di tipo generico `T`.
 
 ### Funzioni Lambda
 
-Le funzioni lambda sono funzioni anonime che possono essere definite all'interno di altre funzioni per compiti temporanei. Sono particolarmente utili con gli algoritmi STL.
+Le funzioni lambda sono funzioni anonime che possono essere definite all'interno di altre funzioni per compiti temporanei. Sono particolarmente utili con gli algoritmi STL. Ecco un esempio:
 
-## Conclusioni e Prospettive Future
+```cpp
+#include <algorithm>
+#include <vector>
+#include <iostream>
+using namespace std;
 
-I linguaggi di programmazione continuano ad evolversi per migliorare la sicurezza, l'efficienza e la facilità d'uso. Le nuove versioni di C e C++ introducono caratteristiche che rispondono alle esigenze moderne di sviluppo software. Le future evoluzioni del C e C++ probabilmente si concentreranno su una migliore gestione della memoria, parallelismo, e supporto per nuove architetture hardware. C++ continua a evolversi con nuove versioni come C++20 e C++23, introducendo caratteristiche che migliorano la programmazione concorrente e funzionale.
+int main() {
+    vector<int> numeri = {1, 2, 3, 4, 5};
+    for_each(numeri.begin(), numeri.end(), [](int n) {
+        cout << n << " ";
+    });
+    cout << endl;
+    return 0;
+}
+```
+
+- `for_each(numeri.begin(), numeri.end(), [](int n) { cout << n << " "; })`: Algoritmo STL che applica una funzione lambda a ogni elemento di un `vector`.
